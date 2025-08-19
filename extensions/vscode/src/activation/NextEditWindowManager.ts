@@ -408,7 +408,7 @@ export class NextEditWindowManager {
 
     // Log with accept = false.
     await vscode.commands.executeCommand(
-      "continue.logNextEditOutcomeReject",
+      "skax.logNextEditOutcomeReject",
       this.mostRecentCompletionId,
       this.loggingService,
     );
@@ -488,7 +488,7 @@ export class NextEditWindowManager {
 
     // Log with accept = true.
     await vscode.commands.executeCommand(
-      "continue.logNextEditOutcomeAccept",
+      "skax.logNextEditOutcomeAccept",
       this.mostRecentCompletionId,
       this.loggingService,
     );

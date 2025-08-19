@@ -500,7 +500,7 @@ export class ContinueCompletionProvider
         range,
         {
           title: "Log Autocomplete Outcome",
-          command: "continue.logAutocompleteOutcome",
+          command: "skax.logAutocompleteOutcome",
           arguments: [completionId, this.completionProvider],
         },
       );
@@ -562,7 +562,7 @@ export class ContinueCompletionProvider
 
         // Track this ghost text for acceptance detection.
         // Ghost text acceptance can *technically* be acted upon in
-        // the command handler for "continue.logNextEditOutcomeAccept",
+        // the command handler for "skax.logNextEditOutcomeAccept",
         // but there is a substantial delay between accepting and logging,
         // which introduces a lot of race conditions with different event handlers.
         // Plus, separating these concerns seems to make sense logically as well.
@@ -580,7 +580,7 @@ export class ContinueCompletionProvider
           ),
           {
             title: "Log Next Edit Outcome",
-            command: "continue.logNextEditOutcomeAccept",
+            command: "skax.logNextEditOutcomeAccept",
             arguments: [completionId, this.nextEditLoggingService],
           },
         );

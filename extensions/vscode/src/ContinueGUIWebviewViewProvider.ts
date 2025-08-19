@@ -10,7 +10,7 @@ import type { FileEdit } from "core";
 export class ContinueGUIWebviewViewProvider
   implements vscode.WebviewViewProvider
 {
-  public static readonly viewType = "continue.continueGUIView";
+  public static readonly viewType = "skax.skaxGUIView";
   public webviewProtocol: VsCodeWebviewProtocol;
 
   public get isReady(): boolean {
@@ -22,13 +22,22 @@ export class ContinueGUIWebviewViewProvider
     _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken,
   ): void | Thenable<void> {
-    this.webviewProtocol.webview = webviewView.webview;
-    this._webviewView = webviewView;
-    this._webview = webviewView.webview;
-    webviewView.webview.html = this.getSidebarContent(
-      this.extensionContext,
-      webviewView,
-    );
+    try {
+      console.log("SKAX: Resolving webview view...");
+      this.webviewProtocol.webview = webviewView.webview;
+      this._webviewView = webviewView;
+      this._webview = webviewView.webview;
+      const htmlContent = this.getSidebarContent(
+        this.extensionContext,
+        webviewView,
+      );
+      console.log("SKAX: Generated HTML content length:", htmlContent.length);
+      webviewView.webview.html = htmlContent;
+      console.log("SKAX: Webview resolved successfully");
+    } catch (error) {
+      console.error("SKAX: Error resolving webview:", error);
+      throw error;
+    }
   }
 
   private _webview?: vscode.Webview;
@@ -71,78 +80,93 @@ export class ContinueGUIWebviewViewProvider
     edits: FileEdit[] | undefined = undefined,
     isFullScreen = false,
   ): string {
-    const extensionUri = getExtensionUri();
-    let scriptUri: string;
-    let styleMainUri: string;
-    const vscMediaUrl: string = panel.webview
-      .asWebviewUri(vscode.Uri.joinPath(extensionUri, "gui"))
-      .toString();
-
-    const inDevelopmentMode =
-      context?.extensionMode === vscode.ExtensionMode.Development;
-    if (!inDevelopmentMode) {
-      scriptUri = panel.webview
-        .asWebviewUri(vscode.Uri.joinPath(extensionUri, "gui/assets/index.js"))
+    try {
+      const extensionUri = getExtensionUri();
+      console.log("SKAX: Extension URI obtained:", extensionUri.toString());
+      let scriptUri: string;
+      let styleMainUri: string;
+      const vscMediaUrl: string = panel.webview
+        .asWebviewUri(vscode.Uri.joinPath(extensionUri, "gui"))
         .toString();
-      styleMainUri = panel.webview
-        .asWebviewUri(vscode.Uri.joinPath(extensionUri, "gui/assets/index.css"))
-        .toString();
-    } else {
-      scriptUri = "http://localhost:5173/src/main.tsx";
-      styleMainUri = "http://localhost:5173/src/index.css";
-    }
 
-    panel.webview.options = {
-      enableScripts: true,
-      localResourceRoots: [
-        vscode.Uri.joinPath(extensionUri, "gui"),
-        vscode.Uri.joinPath(extensionUri, "assets"),
-      ],
-      enableCommandUris: true,
-      portMapping: [
-        {
-          webviewPort: 65433,
-          extensionHostPort: 65433,
-        },
-      ],
-    };
+      const inDevelopmentMode =
+        context?.extensionMode === vscode.ExtensionMode.Development;
+      console.log("SKAX: Development mode:", inDevelopmentMode);
+      console.log("SKAX: Extension URI:", extensionUri.toString());
 
-    const nonce = getNonce();
+      if (!inDevelopmentMode) {
+        const jsPath = vscode.Uri.joinPath(extensionUri, "gui/assets/index.js");
+        const cssPath = vscode.Uri.joinPath(
+          extensionUri,
+          "gui/assets/index.css",
+        );
+        console.log("SKAX: JS path:", jsPath.toString());
+        console.log("SKAX: CSS path:", cssPath.toString());
 
-    const currentTheme = getTheme();
-    vscode.workspace.onDidChangeConfiguration((e) => {
-      if (
-        e.affectsConfiguration("workbench.colorTheme") ||
-        e.affectsConfiguration("window.autoDetectColorScheme") ||
-        e.affectsConfiguration("window.autoDetectHighContrast") ||
-        e.affectsConfiguration("workbench.preferredDarkColorTheme") ||
-        e.affectsConfiguration("workbench.preferredLightColorTheme") ||
-        e.affectsConfiguration("workbench.preferredHighContrastColorTheme") ||
-        e.affectsConfiguration("workbench.preferredHighContrastLightColorTheme")
-      ) {
-        // Send new theme to GUI to update embedded Monaco themes
-        this.webviewProtocol?.request("setTheme", { theme: getTheme() });
+        scriptUri = panel.webview.asWebviewUri(jsPath).toString();
+        styleMainUri = panel.webview.asWebviewUri(cssPath).toString();
+        console.log("SKAX: Script URI:", scriptUri);
+        console.log("SKAX: Style URI:", styleMainUri);
+      } else {
+        scriptUri = "http://localhost:5173/src/main.tsx";
+        styleMainUri = "http://localhost:5173/src/index.css";
+        console.log("SKAX: Using dev server URIs");
       }
-    });
 
-    this.webviewProtocol.webview = panel.webview;
+      panel.webview.options = {
+        enableScripts: true,
+        localResourceRoots: [
+          vscode.Uri.joinPath(extensionUri, "gui"),
+          vscode.Uri.joinPath(extensionUri, "assets"),
+        ],
+        enableCommandUris: true,
+        portMapping: [
+          {
+            webviewPort: 65433,
+            extensionHostPort: 65433,
+          },
+        ],
+      };
 
-    return `<!DOCTYPE html>
+      const nonce = getNonce();
+
+      const currentTheme = getTheme();
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (
+          e.affectsConfiguration("workbench.colorTheme") ||
+          e.affectsConfiguration("window.autoDetectColorScheme") ||
+          e.affectsConfiguration("window.autoDetectHighContrast") ||
+          e.affectsConfiguration("workbench.preferredDarkColorTheme") ||
+          e.affectsConfiguration("workbench.preferredLightColorTheme") ||
+          e.affectsConfiguration("workbench.preferredHighContrastColorTheme") ||
+          e.affectsConfiguration(
+            "workbench.preferredHighContrastLightColorTheme",
+          )
+        ) {
+          // Send new theme to GUI to update embedded Monaco themes
+          this.webviewProtocol?.request("setTheme", { theme: getTheme() });
+        }
+      });
+
+      this.webviewProtocol.webview = panel.webview;
+
+      return `<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script>const vscode = acquireVsCodeApi();</script>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'nonce-${nonce}' ${panel.webview.cspSource} ${inDevelopmentMode ? "http://localhost:5173" : ""}; script-src-elem 'unsafe-inline' 'nonce-${nonce}' ${panel.webview.cspSource} ${inDevelopmentMode ? "http://localhost:5173" : ""}; style-src 'unsafe-inline' ${panel.webview.cspSource} ${inDevelopmentMode ? "http://localhost:5173" : ""}; style-src-elem 'unsafe-inline' ${panel.webview.cspSource} ${inDevelopmentMode ? "http://localhost:5173" : ""}; font-src ${panel.webview.cspSource} data:; img-src ${panel.webview.cspSource} data: https:; connect-src ${panel.webview.cspSource} ${inDevelopmentMode ? "ws://localhost:5173 http://localhost:5173" : ""};">
+        <script nonce="${nonce}">const vscode = acquireVsCodeApi();</script>
         <link href="${styleMainUri}" rel="stylesheet">
 
-        <title>Continue</title>
+        <title>SKAX</title>
       </head>
       <body>
         <div id="root"></div>
 
         ${
           inDevelopmentMode
-            ? `<script type="module">
+            ? `<script type="module" nonce="${nonce}">
           import RefreshRuntime from "http://localhost:5173/@react-refresh"
           RefreshRuntime.injectIntoGlobalHook(window)
           window.$RefreshReg$ = () => {}
@@ -154,29 +178,33 @@ export class ContinueGUIWebviewViewProvider
 
         <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
 
-        <script>localStorage.setItem("ide", '"vscode"')</script>
-        <script>localStorage.setItem("vsCodeUriScheme", '"${getvsCodeUriScheme()}"')</script>
-        <script>localStorage.setItem("extensionVersion", '"${getExtensionVersion()}"')</script>
-        <script>window.windowId = "${this.windowId}"</script>
-        <script>window.vscMachineId = "${getUniqueId()}"</script>
-        <script>window.vscMediaUrl = "${vscMediaUrl}"</script>
-        <script>window.ide = "vscode"</script>
-        <script>window.fullColorTheme = ${JSON.stringify(currentTheme)}</script>
-        <script>window.colorThemeName = "dark-plus"</script>
-        <script>window.workspacePaths = ${JSON.stringify(
+        <script nonce="${nonce}">localStorage.setItem("ide", '"vscode"')</script>
+        <script nonce="${nonce}">localStorage.setItem("vsCodeUriScheme", '"${getvsCodeUriScheme()}"')</script>
+        <script nonce="${nonce}">localStorage.setItem("extensionVersion", '"${getExtensionVersion()}"')</script>
+        <script nonce="${nonce}">window.windowId = "${this.windowId}"</script>
+        <script nonce="${nonce}">window.vscMachineId = "${getUniqueId()}"</script>
+        <script nonce="${nonce}">window.vscMediaUrl = "${vscMediaUrl}"</script>
+        <script nonce="${nonce}">window.ide = "vscode"</script>
+        <script nonce="${nonce}">window.fullColorTheme = ${JSON.stringify(currentTheme)}</script>
+        <script nonce="${nonce}">window.colorThemeName = "dark-plus"</script>
+        <script nonce="${nonce}">window.workspacePaths = ${JSON.stringify(
           vscode.workspace.workspaceFolders?.map((folder) =>
             folder.uri.toString(),
           ) || [],
         )}</script>
-        <script>window.isFullScreen = ${isFullScreen}</script>
+        <script nonce="${nonce}">window.isFullScreen = ${isFullScreen}</script>
 
         ${
           edits
-            ? `<script>window.edits = ${JSON.stringify(edits)}</script>`
+            ? `<script nonce="${nonce}">window.edits = ${JSON.stringify(edits)}</script>`
             : ""
         }
-        ${page ? `<script>window.location.pathname = "${page}"</script>` : ""}
+        ${page ? `<script nonce="${nonce}">window.location.pathname = "${page}"</script>` : ""}
       </body>
     </html>`;
+    } catch (error) {
+      console.error("SKAX: Error generating sidebar content:", error);
+      throw error;
+    }
   }
 }

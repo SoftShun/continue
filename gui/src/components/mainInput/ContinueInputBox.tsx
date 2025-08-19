@@ -11,7 +11,7 @@ import { ToolbarOptions } from "./InputToolbar";
 import { Lump } from "./Lump";
 import { TipTapEditor } from "./TipTapEditor";
 
-interface ContinueInputBoxProps {
+interface SkaxInputBoxProps {
   isLastUserInput: boolean;
   isMainInput?: boolean;
   onEnter: (
@@ -38,7 +38,7 @@ const EDIT_DISALLOWED_CONTEXT_PROVIDERS = [
   "repo-map",
 ];
 
-function ContinueInputBox(props: ContinueInputBoxProps) {
+function SkaxInputBox(props: SkaxInputBoxProps) {
   const isStreaming = useAppSelector((state) => state.session.isStreaming);
   const availableSlashCommands = useAppSelector(
     selectSlashCommandComboBoxInputs,
@@ -123,4 +123,4 @@ function ContinueInputBox(props: ContinueInputBoxProps) {
   );
 }
 
-export default ContinueInputBox;
+export default SkaxInputBox;

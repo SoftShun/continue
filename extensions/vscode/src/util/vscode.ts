@@ -22,7 +22,16 @@ export function getNonce() {
 }
 
 export function getExtensionUri(): vscode.Uri {
-  return vscode.extensions.getExtension("Continue.continue")!.extensionUri;
+  const extension = vscode.extensions.getExtension(
+    "SkaxDev.skax-code-assistant",
+  );
+  if (!extension) {
+    throw new Error("SKAX Code Assistant extension not found");
+  }
+  if (!extension.extensionUri) {
+    throw new Error("Extension URI not available");
+  }
+  return extension.extensionUri;
 }
 
 export function getViewColumnOfFile(

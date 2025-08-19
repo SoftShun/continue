@@ -141,7 +141,7 @@ export class VerticalDiffManager {
 
     this.disableDocumentChangeListener();
 
-    vscode.commands.executeCommand("setContext", "continue.diffVisible", false);
+    vscode.commands.executeCommand("setContext", "skax.diffVisible", false);
   }
 
   async acceptRejectVerticalDiffBlock(
@@ -199,7 +199,7 @@ export class VerticalDiffManager {
     streamId: string,
     toolCallId?: string,
   ) {
-    vscode.commands.executeCommand("setContext", "continue.diffVisible", true);
+    vscode.commands.executeCommand("setContext", "skax.diffVisible", true);
 
     // Get the current editor fileUri/range
     let editor = vscode.window.activeTextEditor;
@@ -253,11 +253,7 @@ export class VerticalDiffManager {
       );
     }
 
-    vscode.commands.executeCommand(
-      "setContext",
-      "continue.streamingDiff",
-      true,
-    );
+    vscode.commands.executeCommand("setContext", "skax.streamingDiff", true);
 
     try {
       this.logDiffs = await diffHandler.run(diffStream);
@@ -275,11 +271,7 @@ export class VerticalDiffManager {
         throw new Error(message);
       }
     } finally {
-      vscode.commands.executeCommand(
-        "setContext",
-        "continue.streamingDiff",
-        false,
-      );
+      vscode.commands.executeCommand("setContext", "skax.streamingDiff", false);
     }
   }
 
@@ -302,11 +294,7 @@ export class VerticalDiffManager {
     toolCallId?: string;
     rulesToInclude: undefined | RuleWithSource[];
   }): Promise<string | undefined> {
-    void vscode.commands.executeCommand(
-      "setContext",
-      "continue.diffVisible",
-      true,
-    );
+    void vscode.commands.executeCommand("setContext", "skax.diffVisible", true);
 
     let editor = vscode.window.activeTextEditor;
 
@@ -443,7 +431,7 @@ export class VerticalDiffManager {
 
     void vscode.commands.executeCommand(
       "setContext",
-      "continue.streamingDiff",
+      "skax.streamingDiff",
       true,
     );
 
@@ -482,7 +470,7 @@ export class VerticalDiffManager {
       this.enableDocumentChangeListener();
 
       if (abortController.signal.aborted) {
-        void vscode.commands.executeCommand("continue.rejectDiff");
+        void vscode.commands.executeCommand("skax.rejectDiff");
       }
 
       const fileAfterEdit = `${prefix}${streamedLines.join("\n")}${suffix}`;
@@ -507,7 +495,7 @@ export class VerticalDiffManager {
     } finally {
       void vscode.commands.executeCommand(
         "setContext",
-        "continue.streamingDiff",
+        "skax.streamingDiff",
         false,
       );
     }

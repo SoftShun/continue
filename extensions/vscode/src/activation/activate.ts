@@ -53,25 +53,33 @@ export async function activateExtension(context: vscode.ExtensionContext) {
   }
 
   // Register config.yaml schema by removing old entries and adding new one (uri.fsPath changes with each version)
-  const yamlMatcher = ".continue/**/*.yaml";
-  const yamlConfig = vscode.workspace.getConfiguration("yaml");
+  // Only register if YAML extension is installed
+  const yamlExtension = vscode.extensions.getExtension("redhat.vscode-yaml");
+  if (yamlExtension) {
+    const yamlMatcher = ".skax/**/*.yaml";
+    const yamlConfig = vscode.workspace.getConfiguration("yaml");
 
-  const newPath = vscode.Uri.joinPath(
-    context.extension.extensionUri,
-    "config-yaml-schema.json",
-  ).toString();
+    const newPath = vscode.Uri.joinPath(
+      context.extension.extensionUri,
+      "config-yaml-schema.json",
+    ).toString();
 
-  try {
-    await yamlConfig.update(
-      "schemas",
-      { [newPath]: [yamlMatcher] },
-      vscode.ConfigurationTarget.Global,
-    );
-  } catch (error) {
-    console.error(
-      "Failed to register Continue config.yaml schema, most likely, YAML extension is not installed",
-      error,
-    );
+    try {
+      // Check if yaml.schemas configuration exists
+      const currentSchemas = yamlConfig.get("schemas") || {};
+      const updatedSchemas = { ...currentSchemas, [newPath]: [yamlMatcher] };
+
+      await yamlConfig.update(
+        "schemas",
+        updatedSchemas,
+        vscode.ConfigurationTarget.Global,
+      );
+      console.log("Successfully registered SKAX config.yaml schema");
+    } catch (error) {
+      console.warn("Failed to register SKAX config.yaml schema:", error);
+    }
+  } else {
+    console.log("YAML extension not found, skipping schema registration");
   }
 
   const api = new VsCodeContinueApi(vscodeExtension);

@@ -17,11 +17,7 @@ class EditDecorationManager {
   }
 
   private updateInEditMode(inEditMode: boolean) {
-    vscode.commands.executeCommand(
-      "setContext",
-      "continue.inEditMode",
-      inEditMode,
-    );
+    vscode.commands.executeCommand("setContext", "skax.inEditMode", inEditMode);
   }
 
   // Converts each range to a unique string for storing in the map
