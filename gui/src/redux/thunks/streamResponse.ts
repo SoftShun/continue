@@ -7,6 +7,7 @@ import { resolveEditorContent } from "../../components/mainInput/TipTapEditor/ut
 import { selectSelectedChatModel } from "../slices/configSlice";
 import {
   resetNextCodeBlockToApplyIndex,
+  setGroupName,
   submitEditorAndInitAtIndex,
   updateHistoryItemAtIndex,
 } from "../slices/sessionSlice";
@@ -57,6 +58,7 @@ export const streamResponseThunk = createAsyncThunk<
           selectedContextItems,
           selectedCode,
           content,
+          ragGroupName,
           legacyCommandWithInput,
         } = await resolveEditorContent({
           editorState,
@@ -67,6 +69,11 @@ export const streamResponseThunk = createAsyncThunk<
           dispatch,
           getState,
         });
+
+        // RAG 그룹명이 있으면 세션에 저장
+        if (ragGroupName) {
+          dispatch(setGroupName(ragGroupName));
+        }
 
         // symbols for both context items AND selected codeblocks
         const filesForSymbols = [

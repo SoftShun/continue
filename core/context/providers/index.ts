@@ -26,6 +26,7 @@ import OpenFilesContextProvider from "./OpenFilesContextProvider";
 import OSContextProvider from "./OSContextProvider";
 import PostgresContextProvider from "./PostgresContextProvider";
 import ProblemsContextProvider from "./ProblemsContextProvider";
+import RagContextProvider from "./RagContextProvider";
 import RepoMapContextProvider from "./RepoMapContextProvider";
 import RulesContextProvider from "./RulesContextProvider";
 import SearchContextProvider from "./SearchContextProvider";
@@ -63,6 +64,7 @@ export const Providers: (typeof BaseContextProvider)[] = [
   CurrentFileContextProvider,
   URLContextProvider,
   ContinueProxyContextProvider,
+  RagContextProvider,
   RepoMapContextProvider,
   DiscordContextProvider,
   GreptileContextProvider,

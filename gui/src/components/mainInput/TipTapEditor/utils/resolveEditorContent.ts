@@ -31,6 +31,7 @@ interface ResolveEditorContentOutput {
   selectedContextItems: ContextItemWithId[];
   selectedCode: RangeInFile[];
   content: MessageContent;
+  ragGroupName?: string; // RAG 그룹명 추가
   legacyCommandWithInput:
     | {
         command: SlashCommandDescWithSource;
@@ -83,7 +84,7 @@ export async function resolveEditorContent({
     dispatch(setIsGatheringContext(true));
   }
 
-  const selectedContextItems = await gatherContextItems({
+  const { contextItems, ragGroupName } = await gatherContextItems({
     contextRequests,
     modifiers,
     ideMessenger,
@@ -98,9 +99,10 @@ export async function resolveEditorContent({
   }
 
   return {
-    selectedContextItems,
+    selectedContextItems: contextItems,
     selectedCode,
     content: slashedParts,
+    ragGroupName,
     legacyCommandWithInput,
   };
 }
@@ -124,7 +126,7 @@ async function gatherContextItems({
   parts: MessagePart[];
   selectedCode: RangeInFile[];
   getState: () => RootState;
-}): Promise<ContextItemWithId[]> {
+}): Promise<{ contextItems: ContextItemWithId[]; ragGroupName?: string }> {
   const defaultRequests: GetContextRequest[] = defaultContextProviders.map(
     (def) => ({
       provider: def.name,
@@ -144,8 +146,15 @@ async function gatherContextItems({
     [],
   );
   let contextItems: ContextItemWithId[] = [];
+  let ragGroupName: string | undefined;
 
   const isInAgentMode = getState().session.mode === "agent";
+
+  // RAG 그룹명 찾기
+  const ragRequest = deduplicatedInputs.find((item) => item.provider === "rag");
+  if (ragRequest?.query) {
+    ragGroupName = ragRequest.query;
+  }
 
   // Process context item attributes
   for (const item of deduplicatedInputs) {
@@ -226,5 +235,5 @@ async function gatherContextItems({
     },
     [],
   );
-  return deduplicatedOutputs;
+  return { contextItems: deduplicatedOutputs, ragGroupName };
 }

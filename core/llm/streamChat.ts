@@ -31,10 +31,110 @@ export async function* llmStreamChat(
     messageOptions,
   } = msg.data;
 
+  // Add Continue.dev context identifier if not already present
+  const enhancedCompletionOptions = {
+    ...completionOptions,
+    context: (completionOptions as any).context || "continue.dev",
+  };
+
+  console.log("=== CONTINUE.DEV STREAMCHAT DEBUG ===");
+  console.log(
+    "Original completionOptions:",
+    JSON.stringify(
+      {
+        model: completionOptions.model,
+        context: (completionOptions as any).context,
+        groupName: completionOptions.groupName,
+      },
+      null,
+      2,
+    ),
+  );
+  console.log(
+    "Enhanced completionOptions:",
+    JSON.stringify(
+      {
+        model: enhancedCompletionOptions.model,
+        context: (enhancedCompletionOptions as any).context,
+        groupName: enhancedCompletionOptions.groupName,
+      },
+      null,
+      2,
+    ),
+  );
+  console.log("=====================================");
+
   const model = config.selectedModelByRole.chat;
 
   if (!model) {
     throw new Error("No chat model selected");
+  }
+
+  // Note: RAG search is now handled through Context Providers (@rag:groupName)
+  // The groupName completion option is maintained for backward compatibility
+  let enhancedMessages = messages;
+
+  // Legacy RAG support: If groupName is provided, show deprecation notice
+  if (enhancedCompletionOptions.groupName) {
+    console.info(
+      `Using RAG group: ${completionOptions.groupName} (via Context Provider)`,
+    );
+
+    // Still provide the old functionality for backward compatibility
+    try {
+      const { retrieveContextItemsFromEmbeddings } = await import(
+        "../context/retrieval/retrieval"
+      );
+
+      const lastUserMessage = messages.filter((m) => m.role === "user").pop();
+      if (lastUserMessage) {
+        const query =
+          typeof lastUserMessage.content === "string"
+            ? lastUserMessage.content
+            : lastUserMessage.content
+                .filter((p) => p.type === "text")
+                .map((p) => p.text)
+                .join(" ");
+
+        const contextExtras = {
+          config,
+          fullInput: query,
+          embeddingsProvider: config.selectedModelByRole.embed,
+          reranker: config.selectedModelByRole.rerank,
+          llm: model,
+          ide,
+          selectedCode: [],
+          fetch: (url: string | URL, init?: any) =>
+            fetchwithRequestOptions(url, init, config.requestOptions),
+          isInAgentMode: false,
+        };
+
+        const contextItems = await retrieveContextItemsFromEmbeddings(
+          contextExtras,
+          { groupName: enhancedCompletionOptions.groupName },
+          undefined,
+        );
+
+        if (contextItems.length > 0) {
+          const contextContent = contextItems
+            .map((item) => `## ${item.name}\n${item.content}`)
+            .join("\n\n");
+
+          const contextMessage = {
+            role: "system" as const,
+            content: `다음은 "${enhancedCompletionOptions.groupName}" 그룹에서 검색된 관련 컨텍스트입니다:\n\n${contextContent}\n\n위의 컨텍스트를 참고하여 사용자 질문에 답변해주세요.`,
+          };
+
+          enhancedMessages = [
+            ...messages.slice(0, -1),
+            contextMessage,
+            ...messages.slice(-1),
+          ];
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to retrieve RAG context:", error);
+    }
   }
 
   // Log to return in case of error
@@ -44,7 +144,7 @@ export async function* llmStreamChat(
     completion: "",
     prompt: "",
     completionOptions: {
-      ...msg.data.completionOptions,
+      ...enhancedCompletionOptions,
       model: model?.model,
     },
   };
@@ -75,7 +175,7 @@ export async function* llmStreamChat(
 
       const gen = slashCommand.run({
         input,
-        history: messages,
+        history: enhancedMessages,
         llm: model,
         contextItems,
         params: command.params,
@@ -97,7 +197,7 @@ export async function* llmStreamChat(
             },
             config.requestOptions,
           ),
-        completionOptions,
+        completionOptions: enhancedCompletionOptions,
         abortController,
       });
       let next = await gen.next();
@@ -121,9 +221,9 @@ export async function* llmStreamChat(
       return next.value;
     } else {
       const gen = model.streamChat(
-        messages,
+        enhancedMessages,
         abortController.signal,
-        completionOptions,
+        enhancedCompletionOptions,
         messageOptions,
       );
       let next = await gen.next();

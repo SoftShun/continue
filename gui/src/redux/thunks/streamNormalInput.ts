@@ -174,6 +174,14 @@ export const streamNormalInput = createAsyncThunk<
       };
     }
 
+    // Add group name for RAG search if available
+    if (state.session.groupName) {
+      completionOptions = {
+        ...completionOptions,
+        groupName: state.session.groupName,
+      };
+    }
+
     // Construct messages (excluding system message)
     const baseSystemMessage = getBaseSystemMessage(
       state.session.mode,

@@ -810,6 +810,7 @@ declare global {
     | "os"
     | "currentFile"
     | "greptile"
+    | "rag"
     | "outline"
     | "continue-proxy"
     | "highlights"
@@ -932,6 +933,9 @@ declare global {
     stream?: boolean;
     prediction?: Prediction;
     tools?: Tool[];
+    groupName?: string;
+    /** Context identifier for client type recognition (e.g., "continue.dev") */
+    context?: string;
   }
   
   export interface ModelCapability {

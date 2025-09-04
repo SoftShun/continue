@@ -85,8 +85,11 @@ export function toChatMessage(
 export function toChatBody(
   messages: ChatMessage[],
   options: CompletionOptions,
-): ChatCompletionCreateParams {
-  const params: ChatCompletionCreateParams = {
+): ChatCompletionCreateParams & { group_name?: string; context?: string } {
+  const params: ChatCompletionCreateParams & {
+    group_name?: string;
+    context?: string;
+  } = {
     messages: messages.map(toChatMessage),
     model: options.model,
     max_tokens: options.maxTokens,
@@ -110,6 +113,16 @@ export function toChatBody(
         strict: tool.function.strict,
       },
     }));
+  }
+
+  // Add group_name if provided
+  if (options.groupName) {
+    params.group_name = options.groupName;
+  }
+
+  // Add context if provided (for client identification, e.g., "continue.dev")
+  if ((options as any).context) {
+    params.context = (options as any).context;
   }
 
   return params;

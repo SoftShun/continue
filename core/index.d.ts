@@ -979,6 +979,7 @@ export type ContextProviderName =
   | "highlights"
   | "file"
   | "issue"
+  | "rag"
   | "repo-map"
   | "url"
   | "commit"
@@ -1138,6 +1139,7 @@ export interface BaseCompletionOptions {
   reasoning?: boolean;
   reasoningBudgetTokens?: number;
   promptCaching?: boolean;
+  groupName?: string;
 }
 
 export interface ModelCapability {

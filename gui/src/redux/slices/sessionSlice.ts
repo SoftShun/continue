@@ -226,6 +226,7 @@ type SessionState = {
   hasReasoningEnabled?: boolean;
   isPruned?: boolean;
   contextPercentage?: number;
+  groupName?: string;
   inlineErrorMessage?: InlineErrorMessageType;
   compactionLoading: Record<number, boolean>; // Track compaction loading by message index
 };
@@ -247,6 +248,7 @@ const initialState: SessionState = {
   },
   lastSessionId: undefined,
   newestToolbarPreviewForInput: {},
+  groupName: undefined,
   compactionLoading: {},
 };
 
@@ -949,6 +951,9 @@ export const sessionSlice = createSlice({
     setContextPercentage: (state, action: PayloadAction<number>) => {
       state.contextPercentage = action.payload;
     },
+    setGroupName: (state, action: PayloadAction<string | undefined>) => {
+      state.groupName = action.payload;
+    },
   },
   selectors: {
     selectIsGatheringContext: (state) => {
@@ -1036,6 +1041,7 @@ export const {
   setInlineErrorMessage,
   setIsPruned,
   setContextPercentage,
+  setGroupName,
   setCompactionLoading,
 } = sessionSlice.actions;
 
