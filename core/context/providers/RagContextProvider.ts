@@ -12,8 +12,7 @@ class RagContextProvider extends BaseContextProvider {
   static description: ContextProviderDescription = {
     title: "rag",
     displayTitle: "RAG 검색",
-    description:
-      "RAG 임베딩을 사용하여 코드베이스에서 관련 컨텍스트를 검색합니다",
+    description: "RAG 임베딩을 사용하여 관련 정보를 검색합니다",
     type: "submenu",
     renderInlineAs: "📚",
   };
@@ -25,43 +24,81 @@ class RagContextProvider extends BaseContextProvider {
     // query는 실제로는 submenu에서 선택된 그룹명이 됩니다
     const groupName = query;
 
-    // RAG 검색 수행
+    // 실제 RAG 서버에 검색 요청
     try {
-      const results = await retrieveContextItemsFromEmbeddings(
-        extras,
-        {
-          nRetrieve: this.options?.nRetrieve ?? 15,
-          nFinal: this.options?.nFinal ?? 10,
-          useReranking: this.options?.useReranking ?? true,
-        },
-        undefined, // filterDirectory - 특정 디렉토리 필터링 없음
+      const apiBaseUrl = this.options?.apiBaseUrl || "http://localhost:8001";
+      const ragSearchUrl = `${apiBaseUrl}/api/v1/search`;
+
+      console.log(
+        `RAG 검색 API 호출: ${ragSearchUrl}, 그룹: ${groupName}, 쿼리: ${extras.fullInput}`,
       );
 
-      if (results.length === 0) {
+      const response = await fetch(ragSearchUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: extras.fullInput, // 사용자의 전체 입력을 검색 쿼리로 사용
+          group: groupName, // 선택된 그룹명
+          maxResults: this.options?.maxResults ?? 10,
+        }),
+        signal: AbortSignal.timeout(10000), // 10초 타임아웃
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `RAG API 호출 실패: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const ragResults = await response.json();
+
+      if (!Array.isArray(ragResults) || ragResults.length === 0) {
         return [
           {
-            description: `RAG 검색 결과 (그룹: ${groupName})`,
-            content: `"${groupName}" 그룹에 대한 RAG 검색 결과를 찾을 수 없습니다.`,
-            name: `RAG: ${groupName}`,
+            description: `RAG 검색 결과 없음 (그룹: ${groupName})`,
+            content: `"${groupName}" 그룹에서 "${extras.fullInput}"에 대한 RAG 검색 결과를 찾을 수 없습니다.`,
+            name: `RAG: ${groupName} - 결과 없음`,
           },
         ];
       }
 
-      // 결과를 그룹명과 함께 반환
-      return results.map((item, index) => ({
-        ...item,
-        name: `RAG: ${groupName} (${index + 1})`,
-        description: `RAG 검색 결과 - ${groupName}: ${item.description}`,
+      console.log(`RAG 검색 성공: ${ragResults.length}개 결과`, ragResults);
+
+      // RAG 서버 응답을 ContextItem 형태로 변환
+      return ragResults.map((result, index) => ({
+        name: `RAG: ${groupName} (${index + 1}) - ${result.title || result.filename || `결과 ${index + 1}`}`,
+        description: `${groupName} 그룹 RAG 검색: ${result.title || result.filename || result.description || ""}`,
+        content: result.content || result.text || JSON.stringify(result),
+        uri: result.filepath
+          ? {
+              type: "file" as const,
+              value: result.filepath,
+            }
+          : undefined,
       }));
     } catch (error) {
       console.error("RAG 검색 중 오류 발생:", error);
-      return [
+
+      // API 호출 실패 시 fallback으로 기존 임베딩 검색 사용
+      console.log("RAG API 실패, 로컬 임베딩 검색으로 fallback");
+
+      const fallbackResults = await retrieveContextItemsFromEmbeddings(
+        extras,
         {
-          description: `RAG 검색 오류 (그룹: ${groupName})`,
-          content: `"${groupName}" 그룹에 대한 RAG 검색 중 오류가 발생했습니다: ${error instanceof Error ? error.message : "알 수 없는 오류"}`,
-          name: `RAG 오류: ${groupName}`,
+          nRetrieve: this.options?.nRetrieve ?? 15,
+          nFinal: this.options?.nFinal ?? 4, // 4개로 제한
+          useReranking: this.options?.useReranking ?? true,
         },
-      ];
+        undefined,
+      );
+
+      return fallbackResults.map((item, index) => ({
+        ...item,
+        name: `RAG Fallback: ${groupName} (${index + 1})`,
+        description: `로컬 검색 결과 - ${groupName}: ${item.description}`,
+      }));
     }
   }
 
@@ -75,7 +112,7 @@ class RagContextProvider extends BaseContextProvider {
       return groups.map((groupName: string) => ({
         id: groupName,
         title: `${groupName}`,
-        description: `${groupName}와 관련된 코드베이스 컨텍스트를 검색합니다`,
+        description: `${groupName}`,
       }));
     } catch (error) {
       console.error("그룹 목록 로드 중 오류:", error);
@@ -97,7 +134,7 @@ class RagContextProvider extends BaseContextProvider {
       return defaultGroups.map((groupName: string) => ({
         id: groupName,
         title: `${groupName}(기본값)`,
-        description: `${groupName}와 관련된 코드베이스 컨텍스트를 검색합니다 (API 연결 실패로 기본값 사용)`,
+        description: `${groupName} (기본값)`,
       }));
     }
   }
