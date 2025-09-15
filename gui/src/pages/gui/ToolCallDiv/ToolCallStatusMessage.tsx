@@ -56,7 +56,7 @@ export function ToolCallStatusMessage({
       className="text-description line-clamp-4 min-w-0 break-all"
       data-testid="tool-call-title"
     >
-      {`SKAX ${intro} ${message}`}
+      {`AX ${intro} ${message}`}
     </div>
   );
 }

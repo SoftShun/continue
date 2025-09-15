@@ -18,9 +18,9 @@
   "homepage": "https://skax.dev",
   "qna": "https://github.com/SKAX/skax-code-assistant/discussions",
   "license": "Apache-2.0",
-  "displayName": "skax-code-assistant - AI code assistant",
+  "displayName": "AX - AI code assistant",
   "pricing": "Free",
-  "description": "SKAX AI code assistant",
+  "description": "AX AI code assistant",
   "publisher": "SkaxDev",
   "engines": {
     "vscode": "^1.70.0",
@@ -84,17 +84,17 @@
       }
     ],
     "configuration": {
-      "title": "SKAX",
+      "title": "AX",
       "properties": {
         "skax.telemetryEnabled": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "SKAX collects anonymous usage data, cleaned of PII, to help us improve the product for our users."
+          "markdownDescription": "AX collects anonymous usage data, cleaned of PII, to help us improve the product for our users."
         },
         "skax.showInlineTip": {
           "type": "boolean",
           "default": true,
-          "description": "Show inline suggestion to use the SKAX keyboard shortcuts (e.g. \"Cmd/Ctrl L to select code, Cmd/Ctrl I to edit\")."
+          "description": "Show inline suggestion to use the AX keyboard shortcuts (e.g. \"Cmd/Ctrl L to select code, Cmd/Ctrl I to edit\")."
         },
         "skax.disableQuickFix": {
           "type": "boolean",
@@ -109,17 +109,17 @@
         "skax.enableTabAutocomplete": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Enable SKAX's tab autocomplete feature."
+          "markdownDescription": "Enable AX's tab autocomplete feature."
         },
         "skax.pauseTabAutocompleteOnBattery": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Pause SKAX's tab autocomplete feature when your battery is low."
+          "markdownDescription": "Pause AX's tab autocomplete feature when your battery is low."
         },
         "skax.pauseCodebaseIndexOnStart": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Pause SKAX's codebase index on start."
+          "markdownDescription": "Pause AX's codebase index on start."
         },
         "skax.enableConsole": {
           "type": "boolean",
@@ -146,231 +146,231 @@
     "commands": [
       {
         "command": "skax.applyCodeFromChat",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Apply code from chat",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.acceptDiff",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Accept Diff",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.rejectDiff",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Reject Diff",
-        "group": "Continue",
+        "group": "AX",
         "icon": "$(stop)"
       },
       {
         "command": "skax.acceptVerticalDiffBlock",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Accept Vertical Diff Block",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.rejectVerticalDiffBlock",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Reject Vertical Diff Block",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.focusEdit",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Edit Highlighted Code",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.focusContinueInput",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Add Highlighted Code to Context and Clear Chat",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.focusContinueInputWithoutClear",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Add Highlighted Code to Context",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.debugTerminal",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Debug Terminal",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.exitEditMode",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Exit Edit Mode",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.toggleFullScreen",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Open in new window",
         "icon": "$(link-external)",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.openConfigPage",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Open Settings",
         "icon": "$(gear)",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.toggleTabAutocompleteEnabled",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Toggle Autocomplete Enabled",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.openTabAutocompleteConfigMenu",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Open Autocomplete Config Menu",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.forceAutocomplete",
-        "title": "Continue: Force Autocomplete",
-        "category": "Continue"
+        "title": "AX: Force Autocomplete",
+        "category": "AX"
       },
       {
         "command": "skax.selectFilesAsContext",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Select Files as Context",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.newSession",
-        "category": "SKAX",
+        "category": "AX",
         "title": "New Session",
         "icon": "$(add)",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.viewHistory",
-        "category": "SKAX",
+        "category": "AX",
         "title": "View History",
         "icon": "$(history)",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.viewLogs",
-        "category": "SKAX",
+        "category": "AX",
         "title": "View History",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.clearConsole",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Clear Console",
         "icon": "$(clear-all)",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.navigateTo",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Navigate to a path",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.writeCommentsForCode",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Write Comments for this Code",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.writeDocstringForCode",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Write a Docstring for this Code",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.fixCode",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Fix this Code",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.optimizeCode",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Optimize this Code",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.fixGrammar",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Fix Grammar / Spelling",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.codebaseForceReIndex",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Codebase Force Re-Index",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.rebuildCodebaseIndex",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Rebuild codebase index",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.docsIndex",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Docs Index",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.docsReIndex",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Docs Force Re-Index",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.focusContinueInput",
-        "category": "SKAX",
-        "title": "Focus Continue Chat",
-        "group": "Continue"
+        "category": "AX",
+        "title": "Focus AX Chat",
+        "group": "AX"
       },
       {
         "command": "skax.enterEnterpriseLicenseKey",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Enter Enterprise License Key",
-        "group": "Continue"
+        "group": "AX"
       },
       {
         "command": "skax.nextEditWindow.hideNextEditSuggestion",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Hide Next Edit Suggestion"
       },
       {
         "command": "skax.nextEditWindow.acceptNextEditSuggestion",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Accept Next Edit Suggestion"
       },
       {
         "command": "skax.forceNextEdit",
-        "category": "SKAX",
-        "title": "Continue: Force Next Edit"
+        "category": "AX",
+        "title": "AX: Force Next Edit"
       },
       {
         "command": "skax.acceptJump",
-        "category": "SKAX",
-        "title": "Continue: Accept Jump Suggestion"
+        "category": "AX",
+        "title": "AX: Accept Jump Suggestion"
       },
       {
         "command": "skax.rejectJump",
-        "category": "SKAX",
-        "title": "Continue: Reject Jump Suggestion"
+        "category": "AX",
+        "title": "AX: Reject Jump Suggestion"
       },
       {
         "command": "skax.generateRule",
-        "category": "SKAX",
+        "category": "AX",
         "title": "Generate Rule",
-        "group": "Continue"
+        "group": "AX"
       }
     ],
     "keybindings": [
@@ -488,7 +488,7 @@
     "submenus": [
       {
         "id": "skax.continueSubMenu",
-        "label": "Continue"
+        "label": "AX"
       }
     ],
     "menus": {
@@ -524,44 +524,44 @@
       "editor/title/run": [
         {
           "command": "skax.rejectDiff",
-          "group": "Continue",
+          "group": "AX",
           "when": "skax.streamingDiff"
         }
       ],
       "skax.continueSubMenu": [
         {
           "command": "skax.focusContinueInputWithoutClear",
-          "group": "Continue",
+          "group": "AX",
           "when": "editorHasSelection"
         },
         {
           "command": "skax.focusEdit",
-          "group": "Continue",
+          "group": "AX",
           "when": "editorHasSelection && !editorReadonly"
         },
         {
           "command": "skax.writeCommentsForCode",
-          "group": "Continue",
+          "group": "AX",
           "when": "editorHasSelection && !editorReadonly"
         },
         {
           "command": "skax.writeDocstringForCode",
-          "group": "Continue",
+          "group": "AX",
           "when": "editorHasSelection && !editorReadonly"
         },
         {
           "command": "skax.fixCode",
-          "group": "Continue",
+          "group": "AX",
           "when": "editorHasSelection && !editorReadonly"
         },
         {
           "command": "skax.optimizeCode",
-          "group": "Continue",
+          "group": "AX",
           "when": "editorHasSelection && !editorReadonly"
         },
         {
           "command": "skax.fixGrammar",
-          "group": "Continue",
+          "group": "AX",
           "when": "editorHasSelection && editorLangId == 'markdown' && !editorReadonly"
         }
       ],
@@ -621,14 +621,14 @@
       "activitybar": [
         {
           "id": "skax",
-          "title": "SKAX",
+          "title": "AX",
           "icon": "media/sidebar-icon.png"
         }
       ],
       "panel": [
         {
           "id": "skaxConsole",
-          "title": "SKAX Console",
+          "title": "AX Console",
           "icon": "$(window)"
         }
       ]
@@ -638,7 +638,7 @@
         {
           "type": "webview",
           "id": "skax.skaxGUIView",
-          "name": "SKAX",
+          "name": "AX",
           "icon": "media/sidebar-icon.png",
           "visibility": "visible"
         }
@@ -647,7 +647,7 @@
         {
           "type": "webview",
           "id": "skax.skaxConsoleView",
-          "name": "SKAX Console",
+          "name": "AX Console",
           "icon": "$(window)",
           "visibility": "visible",
           "when": "config.skax.enableConsole"
@@ -747,6 +747,7 @@
     "@continuedev/fetch": "file:../../packages/fetch",
     "@electron/rebuild": "^3.2.10",
     "@reduxjs/toolkit": "^1.9.3",
+    "@sentry/node": "^10.11.0",
     "@vscode/ripgrep": "^1.15.9",
     "axios": "^1.2.5",
     "core": "file:../../core",

@@ -83,7 +83,7 @@ export class QuickActionsCodeLensProvider implements vscode.CodeLensProvider {
   getDefaultCommand(range: vscode.Range): vscode.Command[] {
     const quickEdit: vscode.Command = {
       command: "skax.defaultQuickAction",
-      title: "Continue",
+      title: "AX",
       arguments: [{ range } as QuickEditShowParams],
     };
 

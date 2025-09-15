@@ -33,7 +33,7 @@ export function OnboardingCardLanding({
         void dispatch(selectFirstHubProfile());
 
         ideMessenger.post("showTutorial", undefined);
-        ideMessenger.post("showToast", ["info", "🎉 Welcome to Continue!"]);
+        ideMessenger.post("showToast", ["info", "🎉 Welcome to AX!"]);
       }
     });
   }

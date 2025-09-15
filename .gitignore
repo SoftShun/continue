@@ -172,3 +172,5 @@ extensions/.continue-debug/
 **/.continue/assistants/
 **/.continue/agents/
 keys
+
+.continue/config.yaml

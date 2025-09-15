@@ -160,17 +160,7 @@ export default async function doLoadConfig(options: {
   newConfig.rules.unshift(...rules);
   newConfig.contextProviders.push(new RulesContextProvider({}));
 
-  // Always include the RagContextProvider (if not already added)
-  const ragProviderExists = newConfig.contextProviders.some(
-    (provider) => provider.description.title === "rag",
-  );
-
-  if (!ragProviderExists) {
-    const { default: RagContextProvider } = await import(
-      "../../context/providers/RagContextProvider.js"
-    );
-    newConfig.contextProviders.push(new RagContextProvider({}));
-  }
+  // RagContextProvider is now properly loaded from YAML configuration
 
   // Add current file as context if setting is enabled
   if (
