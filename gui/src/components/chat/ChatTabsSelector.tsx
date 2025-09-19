@@ -59,8 +59,8 @@ const TabsWrapper = styled.div`
 const ChatTab = styled.div<{ isActive: boolean }>`
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
+  gap: 5px;
+  padding: 5px 9px;
   background-color: ${props =>
     props.isActive
       ? 'rgba(212, 168, 83, 0.15)'
@@ -76,27 +76,18 @@ const ChatTab = styled.div<{ isActive: boolean }>`
       ? 'rgba(212, 168, 83, 0.3)'
       : 'rgba(255, 255, 255, 0.1)'
   };
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   user-select: none;
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  min-width: 80px;
-  max-width: 140px;
+  min-width: 70px;
+  max-width: 120px;
   position: relative;
   white-space: nowrap;
   overflow: hidden;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
 
-  &:hover {
-    background-color: ${props =>
-      props.isActive
-        ? 'rgba(212, 168, 83, 0.2)'
-        : 'rgba(255, 255, 255, 0.12)'
-    };
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
 
   &:active {
     transform: translateY(0);
@@ -112,7 +103,7 @@ const TabContent = styled.div`
 `;
 
 const TabTitle = styled.div`
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: inherit;
   white-space: nowrap;
@@ -126,7 +117,7 @@ const TabTitleInput = styled.input`
   border: 1px solid rgba(212, 168, 83, 0.5);
   border-radius: 3px;
   color: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   font-family: inherit;
   width: 100%;
@@ -145,7 +136,7 @@ const TabTime = styled.div`
   display: flex;
   align-items: center;
   gap: 2px;
-  font-size: 10px;
+  font-size: 9px;
   color: var(--vscode-descriptionForeground);
   opacity: 0.7;
   margin-top: 1px;
@@ -155,8 +146,8 @@ const CloseButton = styled.button<{ visible: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   border-radius: 3px;
   border: none;
   background: none;
@@ -176,8 +167,8 @@ const CloseButton = styled.button<{ visible: boolean }>`
   }
 
   svg {
-    width: 12px;
-    height: 12px;
+    width: 18px;
+    height: 18px;
   }
 `;
 
@@ -236,10 +227,10 @@ export function ChatTabsSelector({
       clearTimeout(hoverTimer);
     }
 
-    // Set new timer for 1 second
+    // Set new timer for 0.3 second
     const timer = setTimeout(() => {
       setShowCloseButton(tabId);
-    }, 1000);
+    }, 300);
 
     setHoverTimer(timer);
   };

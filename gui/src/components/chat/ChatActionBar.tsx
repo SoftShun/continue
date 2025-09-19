@@ -8,12 +8,12 @@ const ActionBarContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px;
+  padding: 4px 16px;
   background-color: var(--vscode-editor-background);
   border-bottom: 1px solid var(--vscode-widget-border);
   border-top: 1px solid var(--vscode-widget-border);
   flex-shrink: 0;
-  min-height: 48px;
+  min-height: 44px;
 `;
 
 const LeftSection = styled.div`
