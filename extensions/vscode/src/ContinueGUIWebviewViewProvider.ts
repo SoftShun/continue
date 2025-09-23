@@ -23,7 +23,7 @@ export class ContinueGUIWebviewViewProvider
     _token: vscode.CancellationToken,
   ): void | Thenable<void> {
     try {
-      console.log("SKAX: Resolving webview view...");
+      console.log("axcode: Resolving webview view...");
       this.webviewProtocol.webview = webviewView.webview;
       this._webviewView = webviewView;
       this._webview = webviewView.webview;
@@ -31,11 +31,11 @@ export class ContinueGUIWebviewViewProvider
         this.extensionContext,
         webviewView,
       );
-      console.log("SKAX: Generated HTML content length:", htmlContent.length);
+      console.log("axcode: Generated HTML content length:", htmlContent.length);
       webviewView.webview.html = htmlContent;
-      console.log("SKAX: Webview resolved successfully");
+      console.log("axcode: Webview resolved successfully");
     } catch (error) {
-      console.error("SKAX: Error resolving webview:", error);
+      console.error("axcode: Error resolving webview:", error);
       throw error;
     }
   }
@@ -82,7 +82,7 @@ export class ContinueGUIWebviewViewProvider
   ): string {
     try {
       const extensionUri = getExtensionUri();
-      console.log("SKAX: Extension URI obtained:", extensionUri.toString());
+      console.log("axcode: Extension URI obtained:", extensionUri.toString());
       let scriptUri: string;
       let styleMainUri: string;
       const vscMediaUrl: string = panel.webview
@@ -91,8 +91,8 @@ export class ContinueGUIWebviewViewProvider
 
       const inDevelopmentMode =
         context?.extensionMode === vscode.ExtensionMode.Development;
-      console.log("SKAX: Development mode:", inDevelopmentMode);
-      console.log("SKAX: Extension URI:", extensionUri.toString());
+      console.log("axcode: Development mode:", inDevelopmentMode);
+      console.log("axcode: Extension URI:", extensionUri.toString());
 
       if (!inDevelopmentMode) {
         const jsPath = vscode.Uri.joinPath(extensionUri, "gui/assets/index.js");
@@ -100,17 +100,17 @@ export class ContinueGUIWebviewViewProvider
           extensionUri,
           "gui/assets/index.css",
         );
-        console.log("SKAX: JS path:", jsPath.toString());
-        console.log("SKAX: CSS path:", cssPath.toString());
+        console.log("axcode: JS path:", jsPath.toString());
+        console.log("axcode: CSS path:", cssPath.toString());
 
         scriptUri = panel.webview.asWebviewUri(jsPath).toString();
         styleMainUri = panel.webview.asWebviewUri(cssPath).toString();
-        console.log("SKAX: Script URI:", scriptUri);
-        console.log("SKAX: Style URI:", styleMainUri);
+        console.log("axcode: Script URI:", scriptUri);
+        console.log("axcode: Style URI:", styleMainUri);
       } else {
         scriptUri = "http://localhost:5173/src/main.tsx";
         styleMainUri = "http://localhost:5173/src/index.css";
-        console.log("SKAX: Using dev server URIs");
+        console.log("axcode: Using dev server URIs");
       }
 
       panel.webview.options = {
@@ -159,7 +159,7 @@ export class ContinueGUIWebviewViewProvider
         <script nonce="${nonce}">const vscode = acquireVsCodeApi();</script>
         <link href="${styleMainUri}" rel="stylesheet">
 
-        <title>SKAX</title>
+        <title>axcode</title>
       </head>
       <body>
         <div id="root"></div>
@@ -203,7 +203,7 @@ export class ContinueGUIWebviewViewProvider
       </body>
     </html>`;
     } catch (error) {
-      console.error("SKAX: Error generating sidebar content:", error);
+      console.error("axcode: Error generating sidebar content:", error);
       throw error;
     }
   }

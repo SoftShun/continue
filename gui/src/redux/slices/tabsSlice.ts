@@ -5,6 +5,7 @@ export interface Tab {
   title: string;
   isActive: boolean;
   sessionId?: string;
+  timestamp: number;
 }
 
 interface TabsState {
@@ -17,6 +18,7 @@ const initialState: TabsState = {
       id: Date.now().toString(36) + Math.random().toString(36).substring(2),
       title: "Chat 1",
       isActive: true,
+      timestamp: Date.now(),
     },
   ],
 };
@@ -37,13 +39,17 @@ export const tabsSlice = createSlice({
         tab.id === id ? { ...tab, ...updates } : tab,
       );
     },
-    addTab: (state, action: PayloadAction<Tab>) => {
+    addTab: (state, action: PayloadAction<Omit<Tab, 'timestamp'> & { timestamp?: number }>) => {
+      const newTab: Tab = {
+        ...action.payload,
+        timestamp: action.payload.timestamp || Date.now(),
+      };
       state.tabs = state.tabs
         .map((tab) => ({
           ...tab,
-          isActive: action.payload.isActive ? false : tab.isActive,
+          isActive: newTab.isActive ? false : tab.isActive,
         }))
-        .concat(action.payload);
+        .concat(newTab);
     },
     removeTab: (state, action: PayloadAction<string>) => {
       state.tabs = state.tabs.filter((tab) => tab.id !== action.payload);
@@ -122,6 +128,7 @@ export const tabsSlice = createSlice({
             title: currentSessionTitle,
             isActive: true,
             sessionId: currentSessionId,
+            timestamp: Date.now(),
           });
       }
     },

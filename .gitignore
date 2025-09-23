@@ -174,3 +174,4 @@ extensions/.continue-debug/
 keys
 
 .continue/config.yaml
+.continue/config.json

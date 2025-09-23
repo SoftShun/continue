@@ -1,5 +1,5 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { defaultBorderRadius } from "..";
@@ -65,8 +65,7 @@ const Tab = styled.div<{ isActive: boolean }>`
   user-select: none;
   position: relative;
   transition: background-color 0.2s;
-  border-top: ${(props) =>
-    props.isActive ? `1px solid ${tabAccentVar}` : `1px solid ${tabBorderVar}`};
+  border-top: 1px solid ${tabBorderVar};
   &:first-child {
     border-left: none;
   }
@@ -87,15 +86,15 @@ const TabTitle = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 13px;
+  font-size: 12px;
 `;
 
 const CloseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   margin-left: 4px;
   border: none;
   background: transparent;
@@ -103,16 +102,11 @@ const CloseButton = styled.button`
   opacity: 0.7;
   cursor: pointer;
   border-radius: ${defaultBorderRadius};
-  padding: 2px;
-  visibility: hidden;
+  padding: 0;
 
   &:hover {
     opacity: 1;
     background-color: ${tabHoverBackgroundVar};
-  }
-
-  ${Tab}:hover & {
-    visibility: visible;
   }
 
   &[disabled] {
@@ -137,6 +131,8 @@ export const TabBar = React.forwardRef<HTMLDivElement>((_, ref) => {
     (state: RootState) => state.session.history.length > 0,
   );
   const tabs = useSelector((state: RootState) => state.tabs.tabs);
+  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+  const [showCloseButton, setShowCloseButton] = useState<string | null>(null);
 
   // Simple UUID generator for our needs
   const generateId = useCallback(() => {
@@ -153,7 +149,7 @@ export const TabBar = React.forwardRef<HTMLDivElement>((_, ref) => {
         newTabId: generateId(), // Pass the ID generator result
       }),
     );
-  }, [currentSessionId, currentSessionTitle]);
+  }, [currentSessionId, currentSessionTitle, generateId, dispatch]);
 
   const handleNewTab = async () => {
     // Save current session before creating new one
@@ -225,6 +221,29 @@ export const TabBar = React.forwardRef<HTMLDivElement>((_, ref) => {
     }
   };
 
+  // Handle tab hover for delayed close button
+  const handleTabMouseEnter = useCallback((tabId: string) => {
+    setHoveredTab(tabId);
+    const timer = setTimeout(() => {
+      setShowCloseButton(tabId);
+    }, 1000); // 1 second delay
+
+    // Store timer to clear it if mouse leaves before delay
+    (window as any)[`tabTimer_${tabId}`] = timer;
+  }, []);
+
+  const handleTabMouseLeave = useCallback((tabId: string) => {
+    setHoveredTab(null);
+    setShowCloseButton(null);
+
+    // Clear the timer if mouse leaves before delay
+    const timer = (window as any)[`tabTimer_${tabId}`];
+    if (timer) {
+      clearTimeout(timer);
+      delete (window as any)[`tabTimer_${tabId}`];
+    }
+  }, []);
+
   return (
     <TabBarContainer
       ref={ref}
@@ -237,6 +256,8 @@ export const TabBar = React.forwardRef<HTMLDivElement>((_, ref) => {
           key={tab.id}
           isActive={tab.isActive}
           onClick={() => handleTabClick(tab.id)}
+          onMouseEnter={() => handleTabMouseEnter(tab.id)}
+          onMouseLeave={() => handleTabMouseLeave(tab.id)}
           onAuxClick={(e) => {
             // Middle mouse button
             if (e.button === 1) {
@@ -248,12 +269,15 @@ export const TabBar = React.forwardRef<HTMLDivElement>((_, ref) => {
           <TabTitle>{tab.title}</TabTitle>
           <CloseButton
             /* disabled={tabs.length === 1} */
+            style={{
+              display: showCloseButton === tab.id ? 'flex' : 'none'
+            }}
             onClick={(e) => {
               e.stopPropagation();
               handleTabClose(tab.id);
             }}
           >
-            <XMarkIcon width={12} height={12} />
+            <XMarkIcon width={18} height={18} />
           </CloseButton>
         </Tab>
       ))}

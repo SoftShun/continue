@@ -35,6 +35,7 @@ import {
   cancelToolCall,
   ChatHistoryItemWithMessageId,
   newSession,
+  updateSessionMetadata,
   updateToolCallOutput,
 } from "../../redux/slices/sessionSlice";
 import { streamEditThunk } from "../../redux/thunks/edit";
@@ -559,17 +560,18 @@ export function Chat() {
   }, [dispatch, sessionId, sessionTitle, history]);
 
   const handleSessionEdit = useCallback(async (editSessionId: string, newTitle: string) => {
-    // Update session title using the existing handleTitleChange logic
-    // But we need to temporarily switch to the session to update it
     if (editSessionId !== sessionId) {
-      // For now, just log the edit - in a full implementation,
-      // this would update the session metadata directly
-      console.log('Editing session:', editSessionId, 'to:', newTitle);
+      // Update non-current session metadata directly
+      console.log('🖊️ Updating session metadata:', editSessionId, 'to:', newTitle);
+      dispatch(updateSessionMetadata({
+        sessionId: editSessionId,
+        title: newTitle,
+      }));
     } else {
       // If editing current session, use existing handler
       await handleTitleChange(newTitle);
     }
-  }, [sessionId, handleTitleChange]);
+  }, [sessionId, handleTitleChange, dispatch]);
 
   const handleTabTitleEdit = useCallback(async (tabId: string, newTitle: string) => {
     // Update the tab title in chat tabs state

@@ -26,7 +26,7 @@ export function getExtensionUri(): vscode.Uri {
     "SkaxDev.skax-code-assistant",
   );
   if (!extension) {
-    throw new Error("SKAX Code Assistant extension not found");
+    throw new Error("axcode Code Assistant extension not found");
   }
   if (!extension.extensionUri) {
     throw new Error("Extension URI not available");

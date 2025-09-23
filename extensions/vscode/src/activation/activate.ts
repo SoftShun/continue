@@ -80,9 +80,9 @@ export async function activateExtension(context: vscode.ExtensionContext) {
         updatedSchemas,
         vscode.ConfigurationTarget.Global,
       );
-      console.log("Successfully registered SKAX config.yaml schema");
+      console.log("Successfully registered axcode config.yaml schema");
     } catch (error) {
-      console.warn("Failed to register SKAX config.yaml schema:", error);
+      console.warn("Failed to register axcode config.yaml schema:", error);
     }
   } else {
     console.log("YAML extension not found, skipping schema registration");

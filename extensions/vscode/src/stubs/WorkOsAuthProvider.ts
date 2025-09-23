@@ -29,7 +29,7 @@ import { PromiseAdapter, promiseFromEvent } from "./promiseUtils";
 import { SecretStorage } from "./SecretStorage";
 import { UriEventHandler } from "./uriHandler";
 
-const AUTH_NAME = "SKAX";
+const AUTH_NAME = "axcode";
 
 const controlPlaneEnv = getControlPlaneEnvSync(true ? "production" : "none");
 

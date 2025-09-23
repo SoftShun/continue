@@ -47,20 +47,20 @@ const statusBarItemText = (
   error?: boolean,
 ) => {
   if (error) {
-    return "$(alert) AX (config error)";
+    return "$(alert) axcode (config error)";
   }
 
   switch (status) {
     case undefined:
       if (loading) {
-        return "$(loading~spin) AX";
+        return "$(loading~spin) axcode";
       }
     case StatusBarStatus.Disabled:
-      return "$(circle-slash) AX";
+      return "$(circle-slash) axcode";
     case StatusBarStatus.Enabled:
-      return "$(check) AX";
+      return "$(check) axcode";
     case StatusBarStatus.Paused:
-      return "$(debug-pause) AX";
+      return "$(debug-pause) axcode";
   }
 };
 

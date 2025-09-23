@@ -138,7 +138,7 @@ export function AddModelForm({
           {/* {!hideFreeTrialLimitMessage && hasPassedFTL() && (
             <p className="text-sm text-gray-400">
               You've reached the free trial limit of {FREE_TRIAL_LIMIT_REQUESTS}{" "}
-              free inputs. To keep using AX, you can either use your own
+              free inputs. To keep using axcode, you can either use your own
               API key, or use a local LLM. To read more about the options, see
               our{" "}
               <a

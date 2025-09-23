@@ -362,7 +362,7 @@ const StyledMarkdownPreview = memo(function StyledMarkdownPreview(
 
   return (
     <StyledMarkdown
-      fontSize={getFontSize()}
+      fontSize={getFontSize() - 1}
       whiteSpace={codeWrapState}
       bgColor={props.useParentBackgroundColor ? "" : vscBackground}
     >

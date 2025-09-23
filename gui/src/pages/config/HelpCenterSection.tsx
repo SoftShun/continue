@@ -39,7 +39,7 @@ export function HelpCenterSection() {
       <h3 className="mb-4 mt-0 text-xl">Help center</h3>
       <div className="-mx-4 flex flex-col">
         <MoreHelpRow
-          title="AX Hub"
+          title="axcode Hub"
           description="Visit hub.continue.dev to explore custom agents and blocks"
           Icon={ArrowTopRightOnSquareIcon}
           onClick={() =>
@@ -49,7 +49,7 @@ export function HelpCenterSection() {
 
         <MoreHelpRow
           title="Documentation"
-          description="Learn how to configure and use AX"
+          description="Learn how to configure and use axcode"
           Icon={ArrowTopRightOnSquareIcon}
           onClick={() =>
             ideMessenger.post("openUrl", "https://docs.continue.dev/")

@@ -140,13 +140,23 @@ function getChatTitleFromMessage(message: ChatMessage) {
     renderChatMessage(message)
       .split("\n")
       .filter((l) => l.trim() !== "")
-      .slice(-1)[0] || "";
+      .slice(0, 1)[0] || ""; // Take first non-empty line instead of last
 
-  // Truncate
-  if (text.length > MAX_TITLE_LENGTH) {
-    return text.slice(0, MAX_TITLE_LENGTH - 3) + "...";
+  // Clean up the text - remove markdown formatting and extra whitespace
+  const cleanText = text
+    .replace(/^\s*#+\s*/, '') // Remove markdown headers
+    .replace(/^\s*[-*+]\s*/, '') // Remove list markers
+    .replace(/^\s*\d+\.\s*/, '') // Remove numbered list markers
+    .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold formatting
+    .replace(/\*(.*?)\*/g, '$1') // Remove italic formatting
+    .replace(/`([^`]+)`/g, '$1') // Remove inline code formatting
+    .trim();
+
+  // Truncate with proper handling for Korean characters
+  if (cleanText.length > MAX_TITLE_LENGTH) {
+    return cleanText.slice(0, MAX_TITLE_LENGTH - 3) + "...";
   }
-  return text;
+  return cleanText || "새 채팅";
 }
 
 export const saveCurrentSession = createAsyncThunk<
