@@ -172,7 +172,7 @@ export class VsCodeExtension {
     // Sidebar
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(
-        "skax.skaxGUIView",
+        "axcode.axcodeGUIView",
         this.sidebar,
         {
           webviewOptions: { retainContextWhenHidden: true },

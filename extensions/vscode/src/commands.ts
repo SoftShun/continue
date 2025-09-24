@@ -47,7 +47,7 @@ let fullScreenPanel: vscode.WebviewPanel | undefined;
 function getFullScreenTab() {
   const tabs = vscode.window.tabGroups.all.flatMap((tabGroup) => tabGroup.tabs);
   return tabs.find((tab) =>
-    (tab.input as any)?.viewType?.endsWith("skax.skaxGUIView"),
+    (tab.input as any)?.viewType?.endsWith("axcode.axcodeGUIView"),
   );
 }
 
@@ -70,7 +70,7 @@ function focusGUI() {
     fullScreenPanel?.reveal();
   } else {
     // focus sidebar
-    vscode.commands.executeCommand("skax.skaxGUIView.focus");
+    vscode.commands.executeCommand("axcode.axcodeGUIView.focus");
     // vscode.commands.executeCommand("workbench.action.focusAuxiliaryBar");
   }
 }
@@ -214,7 +214,7 @@ const getCommandsMap: (
 
       addCodeToContextFromRange(range, sidebar.webviewProtocol, prompt);
 
-      vscode.commands.executeCommand("skax.skaxGUIView.focus");
+      vscode.commands.executeCommand("axcode.axcodeGUIView.focus");
     },
     // Passthrough for telemetry purposes
     "skax.defaultQuickAction": async (args: QuickEditShowParams) => {
@@ -229,7 +229,7 @@ const getCommandsMap: (
 
       addCodeToContextFromRange(range, sidebar.webviewProtocol, prompt);
 
-      vscode.commands.executeCommand("skax.skaxGUIView.focus");
+      vscode.commands.executeCommand("axcode.axcodeGUIView.focus");
     },
     "skax.customQuickActionStreamInlineEdit": async (
       prompt: string,
@@ -390,7 +390,7 @@ const getCommandsMap: (
 
       const terminalContents = await ide.getTerminalContents();
 
-      vscode.commands.executeCommand("skax.skaxGUIView.focus");
+      vscode.commands.executeCommand("axcode.axcodeGUIView.focus");
 
       sidebar.webviewProtocol?.request("userInput", {
         input: `I got the following error, can you please help explain how to fix it?\n\n${terminalContents.trim()}`,
@@ -406,7 +406,7 @@ const getCommandsMap: (
     "skax.addModel": () => {
       captureCommandTelemetry("addModel");
 
-      vscode.commands.executeCommand("skax.skaxGUIView.focus");
+      vscode.commands.executeCommand("axcode.axcodeGUIView.focus");
       sidebar.webviewProtocol?.request("addModel", undefined);
     },
     "skax.newSession": () => {
@@ -452,7 +452,7 @@ const getCommandsMap: (
 
       // Create the full screen panel
       let panel = vscode.window.createWebviewPanel(
-        "skax.skaxGUIView",
+        "axcode.axcodeGUIView",
         "axcode",
         vscode.ViewColumn.One,
         {
@@ -507,7 +507,7 @@ const getCommandsMap: (
         throw new Error("No files were selected");
       }
 
-      vscode.commands.executeCommand("skax.skaxGUIView.focus");
+      vscode.commands.executeCommand("axcode.axcodeGUIView.focus");
 
       for (const uri of uris) {
         // If it's a folder, add the entire folder contents recursively by using walkDir (to ignore ignored files)

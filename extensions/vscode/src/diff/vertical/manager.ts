@@ -141,7 +141,7 @@ export class VerticalDiffManager {
 
     this.disableDocumentChangeListener();
 
-    vscode.commands.executeCommand("setContext", "skax.diffVisible", false);
+    vscode.commands.executeCommand("setContext", "axcode.diffVisible", false);
   }
 
   async acceptRejectVerticalDiffBlock(
@@ -199,7 +199,7 @@ export class VerticalDiffManager {
     streamId: string,
     toolCallId?: string,
   ) {
-    vscode.commands.executeCommand("setContext", "skax.diffVisible", true);
+    vscode.commands.executeCommand("setContext", "axcode.diffVisible", true);
 
     // Get the current editor fileUri/range
     let editor = vscode.window.activeTextEditor;
@@ -253,7 +253,7 @@ export class VerticalDiffManager {
       );
     }
 
-    vscode.commands.executeCommand("setContext", "skax.streamingDiff", true);
+    vscode.commands.executeCommand("setContext", "axcode.streamingDiff", true);
 
     try {
       this.logDiffs = await diffHandler.run(diffStream);
@@ -271,7 +271,7 @@ export class VerticalDiffManager {
         throw new Error(message);
       }
     } finally {
-      vscode.commands.executeCommand("setContext", "skax.streamingDiff", false);
+      vscode.commands.executeCommand("setContext", "axcode.streamingDiff", false);
     }
   }
 
@@ -294,7 +294,7 @@ export class VerticalDiffManager {
     toolCallId?: string;
     rulesToInclude: undefined | RuleWithSource[];
   }): Promise<string | undefined> {
-    void vscode.commands.executeCommand("setContext", "skax.diffVisible", true);
+    void vscode.commands.executeCommand("setContext", "axcode.diffVisible", true);
 
     let editor = vscode.window.activeTextEditor;
 
@@ -431,7 +431,7 @@ export class VerticalDiffManager {
 
     void vscode.commands.executeCommand(
       "setContext",
-      "skax.streamingDiff",
+      "axcode.streamingDiff",
       true,
     );
 
@@ -495,7 +495,7 @@ export class VerticalDiffManager {
     } finally {
       void vscode.commands.executeCommand(
         "setContext",
-        "skax.streamingDiff",
+        "axcode.streamingDiff",
         false,
       );
     }
