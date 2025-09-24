@@ -35,7 +35,8 @@ export function useOnboardingCard(): UseOnboardingCard {
   if (onboardingCard.show) {
     show = true;
   } else {
-    show = onboardingStatus !== "Completed" && !hasDismissedOnboardingCard;
+    show = false; // 기업용 폐쇄망 환경에서는 OnboardingCard 비활성화
+    // show = onboardingStatus !== "Completed" && !hasDismissedOnboardingCard;
   }
 
   async function open(tab?: OnboardingModes) {

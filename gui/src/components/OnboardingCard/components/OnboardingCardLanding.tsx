@@ -54,7 +54,7 @@ export function OnboardingCardLanding({
         <AxcodeLogo height={75} />
       </div>
 
-      {pastFreeTrialLimit ? (
+      {false && pastFreeTrialLimit ? (
         <>
           <p className="xs:w-3/4 w-full text-sm">
             You've reached the free trial limit. Visit the AXCODE Platform to
@@ -67,7 +67,7 @@ export function OnboardingCardLanding({
             Go to AXCODE Platform
           </Button>
         </>
-      ) : (
+      ) : false ? (
         <>
           <p className="mb-5 mt-0 w-full text-sm">
             Log in to access a free trial of the
@@ -96,11 +96,17 @@ export function OnboardingCardLanding({
             Log in to AXCODE Hub
           </Button>
         </>
+      ) : (
+        <>
+          <p className="mb-5 mt-0 w-full text-sm">
+            Configure your AI models to get started with AXCODE
+          </p>
+        </>
       )}
 
-      <SecondaryButton onClick={onSelectConfigure} className="w-full">
-        Or, configure your own models
-      </SecondaryButton>
+      <Button onClick={onSelectConfigure} className="mt-4 w-full">
+        Configure your own models
+      </Button>
     </div>
   );
 }
