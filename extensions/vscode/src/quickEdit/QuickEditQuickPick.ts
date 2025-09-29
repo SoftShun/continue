@@ -201,14 +201,14 @@ export class QuickEdit {
       const { label } = quickPick.selectedItems[0];
       switch (label) {
         case UserPromptLabels.AcceptAll:
-          vscode.commands.executeCommand("skax.acceptDiff", path);
+          vscode.commands.executeCommand("axcode.acceptDiff", path);
           break;
         case UserPromptLabels.RejectAll:
-          vscode.commands.executeCommand("skax.rejectDiff", path);
+          vscode.commands.executeCommand("axcode.rejectDiff", path);
           break;
         case QuickEditInitialItemLabels.Submit:
           if (quickPick.value) {
-            await vscode.commands.executeCommand("skax.rejectDiff", path);
+            await vscode.commands.executeCommand("axcode.rejectDiff", path);
             const newPrompt = quickPick.value;
             appendToHistory(newPrompt, this.context);
             this.handleUserPrompt(newPrompt, path);

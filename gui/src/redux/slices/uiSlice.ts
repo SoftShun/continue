@@ -27,6 +27,7 @@ type UIState = {
   toolGroupSettings: ToolGroupPolicies;
   ruleSettings: RulePolicies;
   ttsActive: boolean;
+  isSettingsModalOpen: boolean;
 };
 
 export const DEFAULT_TOOL_SETTING: ToolPolicy = "allowedWithPermission";
@@ -45,6 +46,7 @@ export const uiSlice = createSlice({
     ),
     shouldAddFileForEditing: false,
     ttsActive: false,
+    isSettingsModalOpen: false,
     toolSettings: {},
     toolGroupSettings: {
       [BUILT_IN_GROUP_NAME]: "include",
@@ -139,6 +141,9 @@ export const uiSlice = createSlice({
     setTTSActive: (state, { payload }: PayloadAction<boolean>) => {
       state.ttsActive = payload;
     },
+    setIsSettingsModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isSettingsModalOpen = action.payload;
+    },
   },
 });
 
@@ -155,6 +160,7 @@ export const {
   addRule,
   toggleRuleSetting,
   setTTSActive,
+  setIsSettingsModalOpen,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

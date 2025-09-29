@@ -69,12 +69,12 @@ export class QuickActionsCodeLensProvider implements vscode.CodeLensProvider {
       return sendToChat
         ? {
             title,
-            command: "skax.customQuickActionSendToChat",
+            command: "axcode.customQuickActionSendToChat",
             arguments: [prompt, range],
           }
         : {
             title,
-            command: "skax.customQuickActionStreamInlineEdit",
+            command: "axcode.customQuickActionStreamInlineEdit",
             arguments: [prompt, range],
           };
     });
@@ -82,7 +82,7 @@ export class QuickActionsCodeLensProvider implements vscode.CodeLensProvider {
 
   getDefaultCommand(range: vscode.Range): vscode.Command[] {
     const quickEdit: vscode.Command = {
-      command: "skax.defaultQuickAction",
+      command: "axcode.defaultQuickAction",
       title: "axcode",
       arguments: [{ range } as QuickEditShowParams],
     };

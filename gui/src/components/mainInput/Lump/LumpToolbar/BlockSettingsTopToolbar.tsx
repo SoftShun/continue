@@ -1,6 +1,7 @@
 import {
   ChatBubbleLeftIcon,
   ChevronLeftIcon,
+  CogIcon,
   CubeIcon,
   EllipsisHorizontalIcon,
   ExclamationTriangleIcon,
@@ -11,7 +12,8 @@ import {
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { vscBadgeForeground } from "../../..";
 import { IdeMessengerContext } from "../../../../context/IdeMessenger";
-import { useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { setIsSettingsModalOpen } from "../../../../redux/slices/uiSlice";
 import FreeTrialButton from "../../../FreeTrialButton";
 import { ToolTip } from "../../../gui/Tooltip";
 import { useFontSize } from "../../../ui/font";
@@ -63,6 +65,12 @@ const sections: Section[] = [
     title: "MCP",
     tooltip: <McpSectionTooltip />,
     icon: Squares2X2Icon,
+  },
+  {
+    id: "settings",
+    title: "Settings",
+    tooltip: "사용자 설정",
+    icon: CogIcon,
   },
   {
     id: "error",
@@ -144,6 +152,7 @@ export function BlockSettingsTopToolbar() {
     setSelectedSection,
   } = useLump();
 
+  const dispatch = useAppDispatch();
   const configError = useAppSelector((store) => store.config.configError);
   const config = useAppSelector((state) => state.config.config);
   const ideMessenger = useContext(IdeMessengerContext);
@@ -217,11 +226,15 @@ export function BlockSettingsTopToolbar() {
                   tooltip={section.tooltip}
                   title={section.title}
                   isSelected={selectedSection === section.id}
-                  onClick={() =>
-                    setSelectedSection(
-                      selectedSection === section.id ? null : section.id,
-                    )
-                  }
+                  onClick={() => {
+                    if (section.id === "settings") {
+                      dispatch(setIsSettingsModalOpen(true));
+                    } else {
+                      setSelectedSection(
+                        selectedSection === section.id ? null : section.id,
+                      );
+                    }
+                  }}
                 />
               ))}
             </div>

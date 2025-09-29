@@ -470,7 +470,7 @@ export class VerticalDiffManager {
       this.enableDocumentChangeListener();
 
       if (abortController.signal.aborted) {
-        void vscode.commands.executeCommand("skax.rejectDiff");
+        void vscode.commands.executeCommand("axcode.rejectDiff");
       }
 
       const fileAfterEdit = `${prefix}${streamedLines.join("\n")}${suffix}`;

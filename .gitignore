@@ -175,3 +175,7 @@ keys
 
 .continue/config.yaml
 .continue/config.json
+
+# PoC 관련 파일들 (개발/테스트용)
+backend-decoder-poc/
+axcode-config-poc/

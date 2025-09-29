@@ -85,3 +85,5 @@ export function isPrerelease() {
 export function isLocalProfile(profile: ProfileDescription): boolean {
   return profile.profileType === "local";
 }
+
+export { SettingsManager, type UserSettings } from "./settingsManager";

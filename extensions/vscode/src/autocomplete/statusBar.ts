@@ -123,7 +123,7 @@ export function setupStatusBar(
 
   statusBarItem.text = statusBarItemText(status, loading, statusBarError);
   statusBarItem.tooltip = statusBarItemTooltip(status ?? statusBarStatus);
-  statusBarItem.command = "skax.openTabAutocompleteConfigMenu";
+  statusBarItem.command = "axcode.openTabAutocompleteConfigMenu";
 
   statusBarItem.show();
   if (status !== undefined) {

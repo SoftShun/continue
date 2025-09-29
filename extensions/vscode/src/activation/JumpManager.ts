@@ -405,7 +405,7 @@ export class JumpManager {
           this._oldCursorPosition &&
           !currentPosition.isEqual(this._oldCursorPosition)
         ) {
-          vscode.commands.executeCommand("skax.rejectJump");
+          vscode.commands.executeCommand("axcode.rejectJump");
         }
       });
 

@@ -22,12 +22,12 @@ export class SuggestionsCodeLensProvider implements vscode.CodeLensProvider {
       codeLenses.push(
         new vscode.CodeLens(range, {
           title: "Accept",
-          command: "skax.acceptSuggestion",
+          command: "axcode.acceptSuggestion",
           arguments: [suggestion],
         }),
         new vscode.CodeLens(range, {
           title: "Reject",
-          command: "skax.rejectSuggestion",
+          command: "axcode.rejectSuggestion",
           arguments: [suggestion],
         }),
       );

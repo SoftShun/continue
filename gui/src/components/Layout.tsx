@@ -10,7 +10,7 @@ import TelemetryProviders from "../hooks/TelemetryProviders";
 import { useWebviewListener } from "../hooks/useWebviewListener";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setCodeToEdit } from "../redux/slices/editState";
-import { setDialogMessage, setShowDialog } from "../redux/slices/uiSlice";
+import { setDialogMessage, setShowDialog, setIsSettingsModalOpen } from "../redux/slices/uiSlice";
 import { enterEdit, exitEdit } from "../redux/thunks/edit";
 import { saveCurrentSession } from "../redux/thunks/session";
 import { fontSize, isMetaEquivalentKeyPressed } from "../util";
@@ -28,6 +28,9 @@ import {
 import OSRContextMenu from "./OSRContextMenu";
 import PostHogPageView from "./PosthogPageView";
 import { FatalErrorIndicator } from "./config/FatalErrorNotice";
+import { ModernSettingsModal } from "./settings/ModernSettingsModal";
+import { loadSettings, saveSettings, AxcodeSettings } from "../services/settingsService";
+import { ToastProvider } from "./common/ToastProvider";
 
 const LayoutTopDiv = styled(CustomScrollbarDiv)`
   height: 100%;
@@ -44,6 +47,7 @@ const GridDiv = styled.div`
 
 const Layout = () => {
   const [showStagingIndicator, setShowStagingIndicator] = useState(false);
+  const [initialSettings, setInitialSettings] = useState<AxcodeSettings | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
@@ -55,6 +59,7 @@ const Layout = () => {
 
   const showDialog = useAppSelector((state) => state.ui.showDialog);
   const isInEdit = useAppSelector((store) => store.session.isInEdit);
+  const isSettingsModalOpen = useAppSelector((state) => state.ui.isSettingsModalOpen);
 
   useEffect(() => {
     (async () => {
@@ -216,6 +221,22 @@ const Layout = () => {
     [],
   );
 
+  useWebviewListener(
+    "openSettingsModal",
+    async () => {
+      // 설정 모달 열 때 현재 설정 불러오기
+      try {
+        const currentSettings = await loadSettings();
+        setInitialSettings(currentSettings);
+      } catch (error) {
+        console.error('설정 불러오기 실패:', error);
+        setInitialSettings(null);
+      }
+      dispatch(setIsSettingsModalOpen(true));
+    },
+    [],
+  );
+
   useEffect(() => {
     const handleKeyDown = (event: any) => {
       if (isMetaEquivalentKeyPressed(event) && event.code === "KeyC") {
@@ -248,7 +269,8 @@ const Layout = () => {
     <LocalStorageProvider>
       <AuthProvider>
         <TelemetryProviders>
-          <LayoutTopDiv>
+          {/* <ToastProvider> */}
+            <LayoutTopDiv>
             {showStagingIndicator && (
               <span
                 title="Staging environment"
@@ -279,6 +301,13 @@ const Layout = () => {
                   message={dialogMessage}
                 />
 
+                <ModernSettingsModal
+                  isOpen={isSettingsModalOpen}
+                  onClose={() => dispatch(setIsSettingsModalOpen(false))}
+                  onSave={saveSettings}
+                  initialSettings={initialSettings || undefined}
+                />
+
                 <GridDiv>
                   <PostHogPageView />
                   <Outlet />
@@ -287,7 +316,8 @@ const Layout = () => {
               </div>
               <div style={{ fontSize: fontSize(-4) }} id="tooltip-portal-div" />
             </LumpProvider>
-          </LayoutTopDiv>
+            </LayoutTopDiv>
+          {/* </ToastProvider> */}
         </TelemetryProviders>
       </AuthProvider>
     </LocalStorageProvider>

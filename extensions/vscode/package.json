@@ -583,6 +583,11 @@
           "when": "view == axcode.continueGUIView"
         },
         {
+          "command": "axcode.openConfigPage",
+          "group": "navigation@3",
+          "when": "view == axcode.continueGUIView"
+        },
+        {
           "command": "axcode.toggleFullScreen",
           "group": "navigation@3",
           "when": "view == axcode.continueGUIView"

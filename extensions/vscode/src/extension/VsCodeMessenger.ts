@@ -104,7 +104,7 @@ export class VsCodeMessenger {
     });
 
     this.onWebview("toggleDevTools", (msg) => {
-      vscode.commands.executeCommand("skax.viewLogs");
+      vscode.commands.executeCommand("axcode.viewLogs");
     });
     this.onWebview("reloadWindow", (msg) => {
       vscode.commands.executeCommand("workbench.action.reloadWindow");
@@ -113,12 +113,12 @@ export class VsCodeMessenger {
       vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
     });
     this.onWebview("toggleFullScreen", (msg) => {
-      vscode.commands.executeCommand("skax.toggleFullScreen");
+      vscode.commands.executeCommand("axcode.toggleFullScreen");
     });
 
     this.onWebview("acceptDiff", async ({ data: { filepath, streamId } }) => {
       await vscode.commands.executeCommand(
-        "skax.acceptDiff",
+        "axcode.acceptDiff",
         filepath,
         streamId,
       );
@@ -126,7 +126,7 @@ export class VsCodeMessenger {
 
     this.onWebview("rejectDiff", async ({ data: { filepath, streamId } }) => {
       await vscode.commands.executeCommand(
-        "skax.rejectDiff",
+        "axcode.rejectDiff",
         filepath,
         streamId,
       );
@@ -370,7 +370,7 @@ export class VsCodeMessenger {
       );
       vscode.commands.executeCommand(
         "setContext",
-        "skax.isSignedInToControlPlane",
+        "axcode.isSignedInToControlPlane",
         false,
       );
     });

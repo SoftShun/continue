@@ -33,7 +33,7 @@ class ContinueQuickFixProvider implements vscode.CodeActionProvider {
     );
 
     quickFix.command = {
-      command: "skax.quickFix",
+      command: "axcode.quickFix",
       title: "Continue Quick Fix",
       arguments: [surroundingRange, diagnostic.message],
     };
