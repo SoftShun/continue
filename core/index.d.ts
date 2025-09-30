@@ -813,6 +813,8 @@ export interface IDE {
 
   writeFile(path: string, contents: string): Promise<void>;
 
+  deleteFile(path: string): Promise<void>;
+
   showVirtualFile(title: string, contents: string): Promise<void>;
 
   openFile(path: string): Promise<void>;
@@ -1283,7 +1285,8 @@ export type MCPConnectionStatus =
   | "connected"
   | "error"
   | "authenticating"
-  | "not-connected";
+  | "not-connected"
+  | "disabled";
 
 export type MCPPromptArgs = {
   name: string;
@@ -1327,6 +1330,7 @@ export interface MCPTool {
 
 export interface MCPServerStatus extends MCPOptions {
   status: MCPConnectionStatus;
+  enabled: boolean;
   errors: string[];
   isProtectedResource: boolean;
 

@@ -316,6 +316,9 @@ export class VsCodeMessenger {
     this.onWebviewOrCore("writeFile", async (msg) => {
       return ide.writeFile(msg.data.path, msg.data.contents);
     });
+    this.onWebviewOrCore("deleteFile", async (msg) => {
+      return ide.deleteFile(msg.data.path);
+    });
     this.onWebviewOrCore("showVirtualFile", async (msg) => {
       return ide.showVirtualFile(msg.data.name, msg.data.content);
     });
@@ -355,7 +358,7 @@ export class VsCodeMessenger {
       return ide.showLines(filepath, startLine, endLine);
     });
     this.onWebviewOrCore("showToast", (msg) => {
-      this.ide.showToast(...msg.data);
+      return this.ide.showToast(...msg.data);
     });
     this.onWebviewOrCore("getControlPlaneSessionInfo", async (msg) => {
       return getControlPlaneSessionInfo(

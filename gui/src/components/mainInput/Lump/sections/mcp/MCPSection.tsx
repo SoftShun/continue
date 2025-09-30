@@ -5,8 +5,10 @@ import {
   CommandLineIcon,
   GlobeAltIcon,
   InformationCircleIcon,
+  PowerIcon,
   ShieldCheckIcon,
   ShieldExclamationIcon,
+  TrashIcon,
   WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import { MCPServerStatus } from "core";
@@ -69,16 +71,113 @@ function MCPServerPreview({ server, serverFromYaml }: MCPServerStatusProps) {
     });
   };
 
+  const onToggle = async () => {
+    const newEnabledState = !server.enabled;
+
+    // Optimistic UI update
+    dispatch(
+      updateConfig({
+        ...config,
+        mcpServerStatuses: config.mcpServerStatuses.map((s) =>
+          s.id === server.id
+            ? {
+                ...s,
+                enabled: newEnabledState,
+                status: newEnabledState ? "connecting" : "disabled",
+              }
+            : s,
+        ),
+      }),
+    );
+
+    try {
+      await ideMessenger.request("mcp/toggleServer", { id: server.id });
+      console.log("✅ MCP 서버 토글 완료:", server.name);
+    } catch (error) {
+      console.error("❌ MCP 서버 토글 실패:", error);
+      // Revert on error
+      dispatch(
+        updateConfig({
+          ...config,
+          mcpServerStatuses: config.mcpServerStatuses.map((s) =>
+            s.id === server.id
+              ? {
+                  ...s,
+                  enabled: server.enabled,
+                  status: server.status,
+                }
+              : s,
+          ),
+        }),
+      );
+    }
+  };
+
+  const onDelete = async () => {
+    console.log("🗑️ onDelete 호출됨! server:", server.name);
+    try {
+      if (server.sourceFile) {
+        console.log("📂 sourceFile:", server.sourceFile);
+
+        // Show confirmation dialog
+        console.log("⚠️ 확인 대화상자 표시 중...");
+        const result = await ideMessenger.ide.showToast(
+          "warning",
+          `MCP 서버 '${server.name}'을(를) 삭제하시겠습니까?`,
+          "삭제",
+          "취소",
+        );
+        console.log("📋 사용자 선택 결과:", result);
+
+        // User cancelled
+        if (result !== "삭제") {
+          console.log("❌ 사용자가 취소함");
+          return;
+        }
+
+        // Delete the file
+        await ideMessenger.ide.deleteFile(server.sourceFile);
+        console.log("✅ MCP 서버 파일 삭제 완료:", server.sourceFile);
+
+        // Update UI by removing from Redux store
+        dispatch(
+          updateConfig({
+            ...config,
+            mcpServerStatuses: config.mcpServerStatuses.filter(
+              (s) => s.id !== server.id,
+            ),
+          }),
+        );
+
+        await ideMessenger.ide.showToast(
+          "info",
+          `MCP 서버 '${server.name}'이(가) 삭제되었습니다.`,
+        );
+      } else {
+        console.warn("⚠️ 소스 파일을 찾을 수 없습니다.");
+        await ideMessenger.ide.showToast("error", "소스 파일을 찾을 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("❌ MCP 서버 삭제 실패:", error);
+      await ideMessenger.ide.showToast("error", `삭제 실패: ${error}`);
+    }
+  };
+
   return (
     <div
       style={{
         fontSize: fontSize(-2),
       }}
-      className={`flex flex-row items-center justify-between gap-3 ${server.status === "authenticating" ? "my-0.5" : ""}`}
+      className={`flex flex-row items-center justify-between gap-3 ${
+        server.status === "authenticating" ? "my-0.5" : ""
+      } ${!server.enabled ? "opacity-50" : ""}`}
     >
       <div className="flex flex-row items-center gap-3">
         {/* Name and Status */}
-        <span className="m-0 font-semibold">{server.name}</span>
+        <span className={`m-0 font-semibold ${!server.enabled ? "text-gray-400" : ""}`}>
+          {server.name}
+          {!server.enabled && <span className="ml-1 text-xs">(비활성화됨)</span>}
+        </span>
 
         {/* Error indicator if any */}
         {server.errors.length ? (
@@ -204,6 +303,26 @@ function MCPServerPreview({ server, serverFromYaml }: MCPServerStatusProps) {
             )}
           </>
         )}
+        {/* Toggle button */}
+        <div
+          className={`flex cursor-pointer items-center hover:opacity-80 ${
+            server.enabled ? "text-green-500" : "text-gray-500"
+          }`}
+          onClick={onToggle}
+          title={server.enabled ? "서버 비활성화" : "서버 활성화"}
+        >
+          <PowerIcon className="h-3 w-3" />
+        </div>
+
+        {/* Delete button */}
+        <div
+          className="text-lightgray flex cursor-pointer items-center hover:text-red-500 hover:opacity-80"
+          onClick={onDelete}
+          title="서버 삭제"
+        >
+          <TrashIcon className="h-3 w-3" />
+        </div>
+
         <EditBlockButton
           blockType={"mcpServers"}
           block={serverFromYaml}
@@ -219,14 +338,17 @@ function MCPServerPreview({ server, serverFromYaml }: MCPServerStatusProps) {
         <div
           className="hidden h-2 w-2 rounded-full sm:flex"
           style={{
-            backgroundColor:
-              server.status === "connected"
+            backgroundColor: !server.enabled
+              ? "#9ca3af" // gray-400 for disabled
+              : server.status === "connected"
                 ? "#22c55e" // green-500
                 : server.status === "connecting"
                   ? "#eab308" // yellow-500
                   : server.status === "not-connected"
                     ? "#78716c" // stone-500
-                    : "#ef4444", // red-500 for error
+                    : server.status === "disabled"
+                      ? "#9ca3af" // gray-400 for disabled
+                      : "#ef4444", // red-500 for error
           }}
         />
       </div>
