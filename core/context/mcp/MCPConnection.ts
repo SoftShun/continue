@@ -51,6 +51,7 @@ class MCPConnection {
   public client: Client;
   public abortController: AbortController;
   public status: MCPConnectionStatus = "not-connected";
+  public enabled: boolean = true;
   public isProtectedResource = false;
   public errors: string[] = [];
   public prompts: MCPPrompt[] = [];
@@ -99,6 +100,7 @@ class MCPConnection {
       resourceTemplates: this.resourceTemplates,
       tools: this.tools,
       status: this.status,
+      enabled: this.enabled,
       isProtectedResource: this.isProtectedResource,
     };
   }

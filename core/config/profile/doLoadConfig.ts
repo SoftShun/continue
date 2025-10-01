@@ -217,7 +217,7 @@ export default async function doLoadConfig(options: {
   newConfig.mcpServerStatuses = serializableStatuses;
 
   for (const server of mcpServerStatuses) {
-    if (server.status === "connected") {
+    if (server.status === "connected" && server.enabled) {
       const serverTools: Tool[] = server.tools.map((tool) => ({
         displayTitle: server.name + " " + tool.name,
         function: {

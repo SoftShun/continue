@@ -2,7 +2,7 @@
   "name": "axcode-code-assistant",
   "icon": "media/icon.png",
   "author": "AXCODE",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "repository": {
     "type": "git",
     "url": "https://github.com/SKAX/skax-code-assistant"
@@ -753,7 +753,7 @@
     "@electron/rebuild": "^3.2.10",
     "@reduxjs/toolkit": "^1.9.3",
     "@sentry/node": "^10.11.0",
-    "@vscode/ripgrep": "^1.15.9",
+    "@vscode/ripgrep": "^1.15.14",
     "axios": "^1.2.5",
     "core": "file:../../core",
     "cors": "^2.8.5",

@@ -85,6 +85,12 @@ async function callToolFromUri(
       if (!client) {
         throw new Error("MCP connection not found");
       }
+
+      // Check if MCP server is enabled
+      if (!client.enabled) {
+        throw new Error(`MCP server is disabled. Please enable it in settings to use this tool.`);
+      }
+
       const response = await client.client.callTool({
         name: toolName,
         arguments: args,

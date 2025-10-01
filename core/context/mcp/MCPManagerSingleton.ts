@@ -170,6 +170,57 @@ export class MCPManagerSingleton {
     this.connections.get(server.id)!.status = status;
   }
 
+  async toggleServer(serverId: string) {
+    const connection = this.connections.get(serverId);
+    if (!connection) {
+      console.warn(`Server ${serverId} not found`);
+      return;
+    }
+
+    connection.enabled = !connection.enabled;
+
+    if (connection.enabled) {
+      // Enable: Start connection
+      connection.status = "connecting";
+      try {
+        await connection.connectClient(true, new AbortController().signal);
+      } catch (error) {
+        console.error(`Failed to enable server ${serverId}:`, error);
+        connection.status = "error";
+      }
+    } else {
+      // Disable: Close connection and set status
+      try {
+        await connection.disconnect();
+        connection.status = "disabled";
+      } catch (error) {
+        console.error(`Failed to disable server ${serverId}:`, error);
+      }
+    }
+
+    // Notify frontend of status change
+    if (this.onConnectionsRefreshed) {
+      this.onConnectionsRefreshed();
+    }
+  }
+
+  removeServer(serverId: string) {
+    console.log(`MCPManager: Attempting to remove server ${serverId}`);
+    const connection = this.connections.get(serverId);
+    if (connection) {
+      console.log(`MCPManager: Found connection for ${serverId}, disconnecting...`);
+      connection.disconnect().catch((error) => {
+        console.error(`MCPManager: Error disconnecting server ${serverId}:`, error);
+      });
+      this.connections.delete(serverId);
+      console.log(`MCPManager: Server ${serverId} removed from connections map`);
+      console.log(`MCPManager: Remaining connections: ${Array.from(this.connections.keys()).join(', ')}`);
+    } else {
+      console.warn(`MCPManager: Server ${serverId} not found in connections`);
+      console.log(`MCPManager: Available servers: ${Array.from(this.connections.keys()).join(', ')}`);
+    }
+  }
+
   async getPrompt(
     serverName: string,
     promptName: string,

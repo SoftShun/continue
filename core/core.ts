@@ -468,6 +468,10 @@ export class Core {
       removeMCPAuth(msg.data, this.ide);
       await MCPManagerSingleton.getInstance().refreshConnection(msg.data.id);
     });
+    on("mcp/toggleServer", async (msg) => {
+      await MCPManagerSingleton.getInstance().toggleServer(msg.data.id);
+    });
+
 
     // Context providers
     on("context/addDocs", async (msg) => {

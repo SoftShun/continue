@@ -308,9 +308,19 @@ void (async () => {
         installAndCopyNodeModules(packageToInstall, "@lancedb"),
       ]);
     } else {
-      // Download esbuild from npm in tmp and copy over
-      console.log("[info] npm installing esbuild binary");
-      await installAndCopyNodeModules("esbuild@0.17.19", "@esbuild");
+      if (target === "win32-x64") {
+        // For Windows x64, use npm packages
+        console.log("[info] Installing pre-built binaries for win32-x64");
+        await Promise.all([
+          installAndCopyNodeModules("@esbuild/win32-x64", "@esbuild"),
+          copySqlite(target),
+          installAndCopyNodeModules("@lancedb/vectordb-win32-x64-msvc", "@lancedb"),
+        ]);
+      } else {
+        // Download esbuild from npm in tmp and copy over
+        console.log("[info] npm installing esbuild binary");
+        await installAndCopyNodeModules("esbuild@0.17.19", "@esbuild");
+      }
     }
   }
 

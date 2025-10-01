@@ -152,6 +152,7 @@ export type ToCoreFromIdeOrWebviewProtocol = {
   ];
   "mcp/startAuthentication": [MCPServerStatus, void];
   "mcp/removeAuthentication": [MCPServerStatus, void];
+  "mcp/toggleServer": [{ id: string }, void];
 
   "context/getSymbolsForFiles": [{ uris: string[] }, FileSymbolMap];
   "context/loadSubmenuItems": [{ title: string }, ContextSubmenuItem[]];
